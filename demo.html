@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>web直播点赞</title>
+    <style>
+    #player-praises {
+        width: 72px;
+        height: 337px;
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        margin-left: -36px;
+    }
+    
+    #player-praises .bubble {
+        width: 100%;
+        height: 280px;
+        position: relative
+    }
+    
+    #player-praises .single-bubble {
+        display: none;
+        width: 25px;
+    }
+    
+    #player-praises svg {
+        position: absolute;
+        top: 260px;
+    }
+    
+    #player-praises .praises {
+        position: relative;
+        top: -15px;
+        display: block;
+        overflow: hidden;
+        padding: 15px
+    }
+    
+    #player-praises .praises span {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: block;
+        background: #fe6f79 url(./praise.png) no-repeat
+    }
+    
+    #player-praises .praises:hover span {
+        background-color: #fc4a57;
+    }
+    
+    #player-praises .praises:active span {
+        background-color: #f43947;
+    </style>
+</head>
+
+<body>
+    <div id="player-praises">
+        <div class="bubble"></div>
+        <a href="###" class="praises"><span></span></a>
+    </div>
+    <script src="./jquery.min.js"></script>
+    <script>
+    //需要的参数
+    var isFirstLike = true;
+
+    var pp = {
+        location: 0,
+        // color: ["ce4f6d", "ca4fce", "4f82ce", "4fce91", "ceca4f"],
+        color: ["FF5D31", "FF7043", "FF9800", "F9A825", "F57F17", "FFCA28"],
+        init: 0,
+        step: 500
+    };
+
+    function bubble() {
+        //添加元素
+        var singleBubble = '<svg class="single-bubble" style="left: ' + pp.location + 'px;color: #' + pp.color[pp.init] + '" viewBox="-1 -1 27 27"><path class="svgpath" style="fill:$fill$;stroke: #FFF; stroke-width: 1px;" d="M11.29,2C7-2.4,0,1,0,7.09c0,4.4,4.06,7.53,7.1,9.9,2.11,1.63,3.21,2.41,4,3a1.72,1.72,0,0,0,2.12,0c0.79-.64,1.88-1.44,4-3,3.09-2.32,7.1-5.55,7.1-9.94,0-6-7-9.45-11.29-5.07A1.15,1.15,0,0,1,11.29,2Z"/></svg>';
+        $(".bubble").append(singleBubble.replace("$fill$", "#" + pp.color[pp.init]));
+
+        //获取颜色
+        pp.init++;
+        if (pp.init >= pp.color.length) {
+            pp.init = 0;
+        }
+
+        pp.location = Math.round(Math.random() * 100 / 3) + 10; //随机位置
+
+        //执行动画
+        $(".single-bubble").each(function() {
+
+            if ($(this).index() % 2 == 0) {
+                pp.step = 250;
+            } else if ($(this).index() % 3 == 0) {
+                pp.step = 200;
+            } else if ($(this).index() % 5 == 0) {
+                pp.step = 100;
+            } else {
+                pp.step = 300;
+            }
+
+            if (!$(this).is(":animated")) {
+                $(this).animate({ //运动
+                        top: "0px",
+                        fontSize: "60px",
+                        opacity: "0",
+                        width: "40px"
+                    }, (500 - pp.step) * 10,
+                    function() {
+                        $(this).remove(); //清除元素
+                    })
+            }
+        });
+        //定时器
+    }
+
+    $(".praises").click(function() {
+        bubble();
+        return false;
+    })
+    </script>
+</body>
+
+</html>
